@@ -10,6 +10,7 @@
  * @param {TreeNode} root
  * @return {number[]}
  */
+// 层序遍历，每次取最后的一个元素
 var rightSideView = function (root) {
     if (root === null) return [];
     const queue = [],
@@ -30,5 +31,22 @@ var rightSideView = function (root) {
         }
         res.push(temp);
     }
+    return res;
+};
+// 根 右子树 左子树
+var rightSideView = function (root) {
+    const res = [];
+    const dfs = (root, depth) => {
+        if (root === null) {
+            return;
+        }
+        if (res.length === depth) {
+            res.push(root.val);
+        }
+        depth++;
+        dfs(root.right, depth);
+        dfs(root.left, depth);
+    }
+    dfs(root, 0);
     return res;
 };
