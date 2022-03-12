@@ -211,3 +211,129 @@ var sortArray = function (nums) {
 };
 console.log(sortArray([4, 1, 4, 6]));
 
+/**
+ * @param {number[]} nums
+ * @return {number[]}
+ */
+// 希尔排序
+var sortArray = function (nums) {
+    const length = nums.length;
+    if (length === 0) return [];
+    for (let gap = parseInt(length >> 1); gap >= 1; gap = parseInt(gap >> 1)) {
+        for (let i = gap; i < length; i++) {
+            let temp = nums[i];
+            let j = i;
+            while (j - gap >= 0 && temp < nums[j - gap]) {
+                nums[j] = nums[j - gap];
+                j -= gap;
+            }
+            nums[j] = temp;
+        }
+    }
+    return nums;
+};
+// 归并排序
+var sortArray = function (nums) {
+    const length = nums.length;
+    if (length === 0) return;
+    if (length === 1) return nums;
+    let middle = parseInt(length >> 1),
+        leftArr = nums.slice(0, middle),
+        rightArr = nums.slice(middle, length);
+    const merge = (leftArr, rightArr) => {
+        let result = [],
+            leftLength = leftArr.length,
+            rightLength = rightArr.length,
+            l = 0,
+            r = 0;
+        while (l < leftLength && r < rightLength) {
+            if (leftArr[l] < rightArr[r]) {
+                result.push(leftArr[l++]);
+            } else {
+                result.push(rightArr[r++]);
+            }
+        }
+        while (l < leftLength) {
+            result.push(leftArr[l++]);
+        }
+        while (r < rightLength) {
+            result.push(rightArr[r++]);
+        }
+        return result;
+    }
+    return merge(sortArray(leftArr), sortArray(rightArr));
+};
+
+
+/**
+ * @param {number[]} nums
+ * @return {number[]}
+ */
+
+function sortArray(array) {
+
+    let length = array.length;
+
+    // 如果不是数组或者数组长度小于等于1，直接返回，不需要排序 
+    if (!Array.isArray(array) || length < 1) return;
+
+    buildMaxHeap(array); // 将传入的数组建立为大顶堆
+
+    // 每次循环，将最大的元素与末尾元素交换，然后剩下的元素重新构建为大顶堆
+    for (let i = length - 1; i > 0; i--) {
+        swap(array, 0, i);
+        adjustMaxHeap(array, 0, i); // 将剩下的元素重新构建为大顶堆
+    }
+
+    return array;
+}
+
+
+function adjustMaxHeap(array, index, heapSize) {
+    let iMax,
+        iLeft,
+        iRight;
+
+    while (true) {
+        iMax = index; // 保存最大值的索引
+        iLeft = 2 * index + 1; // 获取左子元素的索引
+        iRight = 2 * index + 2; // 获取右子元素的索引
+
+        // 如果左子元素存在，且左子元素大于最大值，则更新最大值索引
+        if (iLeft < heapSize && array[iMax] < array[iLeft]) {
+            iMax = iLeft;
+        }
+
+        // 如果右子元素存在，且右子元素大于最大值，则更新最大值索引
+        if (iRight < heapSize && array[iMax] < array[iRight]) {
+            iMax = iRight;
+        }
+
+        // 如果最大元素被更新了，则交换位置，使父节点大于它的子节点，同时将索引值跟新为被替换的值，继续检查它的子树
+        if (iMax !== index) {
+            swap(array, index, iMax);
+            index = iMax;
+        } else {
+
+            // 如果未被更新，说明该子树满足大顶堆的要求，退出循环
+            break;
+        }
+    }
+}
+
+// 构建大顶堆
+function buildMaxHeap(array) {
+    let length = array.length,
+        iParent = parseInt(length >> 1) - 1; // 获取最后一个非叶子点的元素，最后一个节点必然为叶子节点
+
+    for (let i = iParent; i >= 0; i--) {
+        adjustMaxHeap(array, i, length); // 循环调整每一个子树，使其满足大顶堆的要求
+    }
+}
+
+// 交换数组中两个元素的位置
+function swap(array, i, j) {
+    let temp = array[i];
+    array[i] = array[j];
+    array[j] = temp;
+}
