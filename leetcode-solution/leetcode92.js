@@ -30,3 +30,23 @@ var reverseBetween = function (head, left, right) {
     prev.next = pre;
     return dummyHead.next;
 };
+
+
+var reverseBetween = function (head, left, right) {
+    let dummyHead = new ListNode(-1);
+    dummyHead.next = head;
+
+
+    let p = dummyHead, q = dummyHead.next;
+    for (let i = 0; i < left - 1; i++) {
+        p = p.next;
+        q = q.next;
+    }
+    for (let i = 0; i < right - left; i++) {
+        let node = q.next;
+        q.next = q.next.next;
+        node.next = p.next;// 注意顺序问题，不然会有环
+        p.next = node;
+    }
+    return dummyHead.next;
+};
