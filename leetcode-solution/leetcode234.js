@@ -55,3 +55,82 @@ var isPalindrome = function (head) {
     }
     return true;
 };
+
+
+var isPalindrome = function (head) {
+    let left = head;
+    const traverse = (head) => {
+        if (head === null) {
+            return true;
+        }
+        let res = traverse(head.next);
+        res = res && head.val === left.val;
+        left = left.next;
+        return res;
+    }
+    return traverse(head);
+};
+
+
+function ListNode(val, next) {
+    this.val = val === undefined ? 0 : val;
+    this.next = next === undefined ? null : next;
+}
+// 构建链表的方法
+function buildLinkList(values) {
+    return values.reverse().reduce((acc, val) => {
+        console.log(val, acc);
+        return new ListNode(val, acc);
+    }, null);
+}
+
+// ---- Generate our linked list ----
+const linkedList = buildLinkList(["a", "b", "c", "d"]);
+
+var isPalindrome = function (head) {
+    if (head === null || head.next === null) return head;
+
+    let slow = head,
+        fast = head;
+    // 寻找链表中点
+    while (fast !== null && fast.next !== null) {
+        slow = slow.next;
+        fast = fast.next.next;
+    }
+    // 如果fast指针没有指向null，说明链表长度为奇数，slow还要再前进一步：
+    if (fast !== null) {
+        slow = slow.next;
+    }
+    // slow 指针现在指向链表中点
+
+    // 从slow开始反转后面的链表
+    let left = head,
+        right = reverse(slow);
+    let p = null,
+        q = right;
+    // 比较回文串
+    while (right !== null) {
+        if (left.val !== right.val) return false;
+        p = left;
+        left = left.next;
+        right = right.next;
+    }
+
+    // 恢复原先链表顺序
+    p.next = reverse(q);
+    return true;
+
+    function reverse(head) {
+        let prev = null,
+            cur = head;
+        while (cur != null) {
+            const next = cur.next;
+            cur.next = prev;
+            prev = cur;
+            cur = next;
+        }
+        return prev;
+    }
+};
+
+console.log(linkedList);
